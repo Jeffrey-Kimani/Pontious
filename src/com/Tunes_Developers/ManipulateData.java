@@ -4,10 +4,8 @@ import com.Tunes_Developers.Exceptions.MissingParameter;
 import com.Tunes_Developers.Models.ColumnType;
 import com.Tunes_Developers.Models.FakerItem;
 import com.Tunes_Developers.Models.ParameterDetails;
-import com.Tunes_Developers.Tests.TestInsert;
 import com.Tunes_Developers.Utils.DecodeFakerItem;
 import com.Tunes_Developers.Utils.EngineDecoder;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -61,6 +59,25 @@ public class ManipulateData {
         fakerItems.add(new FakerItem(data));
     }
 
+    public SelectStatement select(String... items) throws Exception {
+        String allItems = "";
+
+        for (String s : items) {
+            allItems += s+", ";
+        }
+
+        allItems = allItems.substring(0,allItems.length()-2);
+        //Find the specified create statement
+        String query = table.getEngineModel().getSelectFormat();
+
+        //Replace all the parameter slots with the correct parameter
+        ObservableList<ParameterDetails> details = EngineDecoder.getParameterDetails(query);
+        String[] parameters = {allItems,table.getTableName()};
+        query = EngineDecoder.replace(details, parameters, query);
+
+        return new SelectStatement(table,query);
+    }
+
 //    public void insertRows(int nbRows) throws Exception {
 //        String columnsFormat = "";
 //
@@ -102,6 +119,64 @@ public class ManipulateData {
         }
 
         insertRows(columnsFormat, generateData(1));
+    }
+
+    public void updateRow(String primaryKey, String primaryKeyValue) throws Exception {
+        String updateFormat = "";
+
+        for (int i = 0; i < columns.size(); i++) {
+            ColumnType columnType = columns.get(i);
+
+            if (columnType.isString()) {
+                updateFormat += columnType.getColumn() + "= '" + fakerItems.get(i).getData() + "'";
+            }else{
+                updateFormat += columnType.getColumn() + "= " + fakerItems.get(i).getData();
+            }
+            columnsFormat += columnType.getColumn();
+
+            if (i < columns.size() - 1) {
+                updateFormat += ", ";
+            }
+        }
+
+        //Find the specified create statement
+        String query = table.getEngineModel().getUpdateFormat();
+
+        //Replace all the parameter slots with the correct parameter
+        ObservableList<ParameterDetails> details = EngineDecoder.getParameterDetails(query);
+        String[] parameters = {table.getTableName(), updateFormat, primaryKey,primaryKeyValue};
+        query = EngineDecoder.replace(details, parameters, query);
+
+        table.getDatabase().getStatement().execute(query);
+    }
+
+    public void updateRow(String primaryKeyValue) throws Exception {
+        String updateFormat = "";
+
+        for (int i = 0; i < columns.size(); i++) {
+            ColumnType columnType = columns.get(i);
+
+            if (columnType.isString()) {
+                updateFormat += columnType.getColumn() + "= '" + fakerItems.get(i).getData() + "'";
+            }else{
+                updateFormat += columnType.getColumn() + "= " + fakerItems.get(i).getData();
+            }
+            columnsFormat += columnType.getColumn();
+
+            if (i < columns.size() - 1) {
+                updateFormat += ", ";
+            }
+        }
+
+        //Find the specified create statement
+        String query = table.getEngineModel().getUpdateFormat();
+
+        //Replace all the parameter slots with the correct parameter
+        ObservableList<ParameterDetails> details = EngineDecoder.getParameterDetails(query);
+        String[] parameters = {table.getTableName(), updateFormat, "id",primaryKeyValue};
+        query = EngineDecoder.replace(details, parameters, query);
+
+        table.getDatabase().getStatement().execute(query);
     }
 
     public void insertRows(int nbRows) {
@@ -150,8 +225,33 @@ public class ManipulateData {
         table.getDatabase().getStatement().execute(query);
     }
 
+    public void deleteRow(String primaryKey, String primaryKeyData) throws Exception {
+        //Find the specified create statement
+        String query = table.getEngineModel().getDeleteFrom();
+
+        //Replace all the parameter slots with the correct parameter
+        ObservableList<ParameterDetails> details = EngineDecoder.getParameterDetails(query);
+        String[] parameters = {table.getTableName(), primaryKey, primaryKeyData};
+        query = EngineDecoder.replace(details, parameters, query);
+
+        table.getDatabase().getStatement().execute(query);
+    }
+
+    public void deleteRow(String primaryKeyData) throws Exception {
+        //Find the specified create statement
+        String query = table.getEngineModel().getDeleteFrom();
+
+        //Replace all the parameter slots with the correct parameter
+        ObservableList<ParameterDetails> details = EngineDecoder.getParameterDetails(query);
+        String[] parameters = {table.getTableName(), null, primaryKeyData};
+        query = EngineDecoder.replace(details, parameters, query);
+
+        table.getDatabase().getStatement().execute(query);
+    }
+
     private String generateData(int nbRows) {
         String dataFormat = "";
+        //Decode
         DecodeFakerItem decoder = new DecodeFakerItem(fakerItems);
         data = decoder.generateData(nbRows);
 
