@@ -17,6 +17,9 @@ public class TestDatabase {
         db.setDatabaseName("lash");
 //        Database dbRemote = new Database("46.101.81.163",3306,"muc","root","secret",engine);
 
+        Database dbRemote = new Database("127.0.0.1",3307,"root","J357~</5c0rp10n>",engine);
+
+        dbRemote.create("lash");
 //        db.create("lash");
 //        db.drop();
     }

@@ -9,6 +9,8 @@ import com.Tunes_Developers.Utils.EngineDecoder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.Connection;
+
 /**
  * Created by Geoffrey-Kimani on 10/14/2017.
  */
@@ -147,7 +149,9 @@ public class ManipulateData {
         String[] parameters = {table.getTableName(), updateFormat, primaryKey,primaryKeyValue};
         query = EngineDecoder.replace(details, parameters, query);
 
-        table.getDatabase().getStatement().execute(query);
+        try (Connection con = table.getDatabase().openConnection()) {
+            con.createStatement().execute(query);
+        }
     }
 
     public void updateRow(String primaryKeyValue) throws Exception {
@@ -176,7 +180,9 @@ public class ManipulateData {
         String[] parameters = {table.getTableName(), updateFormat, "id",primaryKeyValue};
         query = EngineDecoder.replace(details, parameters, query);
 
-        table.getDatabase().getStatement().execute(query);
+        try (Connection con = table.getDatabase().openConnection()) {
+            con.createStatement().execute(query);
+        }
     }
 
     public void insertRows(int nbRows) {
@@ -222,7 +228,9 @@ public class ManipulateData {
         String[] parameters = {table.getTableName(), columns, data};
         query = EngineDecoder.replace(details, parameters, query);
 
-        table.getDatabase().getStatement().execute(query);
+        try (Connection con = table.getDatabase().openConnection()) {
+            con.createStatement().execute(query);
+        }
     }
 
     public void deleteRow(String primaryKey, String primaryKeyData) throws Exception {
@@ -234,7 +242,9 @@ public class ManipulateData {
         String[] parameters = {table.getTableName(), primaryKey, primaryKeyData};
         query = EngineDecoder.replace(details, parameters, query);
 
-        table.getDatabase().getStatement().execute(query);
+        try (Connection con = table.getDatabase().openConnection()) {
+            con.createStatement().execute(query);
+        }
     }
 
     public void deleteRow(String primaryKeyData) throws Exception {
@@ -246,7 +256,9 @@ public class ManipulateData {
         String[] parameters = {table.getTableName(), null, primaryKeyData};
         query = EngineDecoder.replace(details, parameters, query);
 
-        table.getDatabase().getStatement().execute(query);
+        try (Connection con = table.getDatabase().openConnection()) {
+            con.createStatement().execute(query);
+        }
     }
 
     private String generateData(int nbRows) {

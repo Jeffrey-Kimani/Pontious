@@ -10,6 +10,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
+import java.sql.Connection;
+
 /**
  * Created by Geoffrey-Kimani on 10/16/2017.
  */
@@ -45,7 +47,9 @@ public class InsertBackground extends Thread{
         String[] parameters = {table.getTableName(),columns,data};
         query = EngineDecoder.replace(details,parameters,query);
 
-        table.getDatabase().getStatement().execute(query);
+        try (Connection con = table.getDatabase().openConnection()) {
+            con.createStatement().execute(query);
+        }
     }
 
     private String generateData(int nbRows) {

@@ -30,7 +30,7 @@ public class TestFunctions {
         insert.cellString("email", fd.emailResource());
         insert.cellString("adm_no",fd.numerify("J##-####-201#"));
         insert.cellInt("marks", fd.numerifyAboveZero("##"));
-        insert.insertRows(30000);
+        insert.insertRows(100);
 
 
     }

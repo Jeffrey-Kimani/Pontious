@@ -1,7 +1,6 @@
 package com.Tunes_Developers;
 
 import com.Tunes_Developers.Exceptions.JoinStatementException;
-import com.Tunes_Developers.Exceptions.MissingParameter;
 import com.Tunes_Developers.Exceptions.OrderByException;
 import com.Tunes_Developers.Exceptions.WhereException;
 import com.Tunes_Developers.Models.ParameterDetails;
@@ -10,27 +9,28 @@ import javafx.collections.ObservableList;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
-import javax.xml.crypto.Data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Created by Geoffrey-Kimani on 11/14/2017.
+ * Created by Geoffrey-Kimani on 11/19/2017.
  */
-public class SelectStatement {
+public class SelectStatementModel {
     private String query;
     private Table table;
     private boolean whereUsed;
     private boolean orderByUsed;
     private boolean innerJoinUsed = false;
+    private Class<?> modelFormat;
 
-    public SelectStatement(Table table,String query) {
+    public SelectStatementModel(Table table,String query,Class<?> modelFormat) {
         this.query = query;
         this.table = table;
+        this.modelFormat = modelFormat;
     }
 
-    public SelectStatement where(String column, String columnData) throws Exception {
+    public SelectStatementModel where(String column, String columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereFormat();
@@ -82,7 +82,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement where(String column, int columnData) throws Exception {
+    public SelectStatementModel where(String column, int columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereFormat();
@@ -135,7 +135,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement where(String column,String condition, String columnData) throws Exception {
+    public SelectStatementModel where(String column,String condition, String columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereFormat();
@@ -187,7 +187,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement whereLike(String column, String columnData) throws Exception {
+    public SelectStatementModel whereLike(String column, String columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereLike();
@@ -239,7 +239,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement whereNotLike(String column, String columnData) throws Exception {
+    public SelectStatementModel whereNotLike(String column, String columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereNotLike();
@@ -291,7 +291,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement where(String column,String condition, int columnData) throws Exception {
+    public SelectStatementModel where(String column,String condition, int columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereFormat();
@@ -343,7 +343,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement orWhere(String column, String columnData) throws Exception {
+    public SelectStatementModel orWhere(String column, String columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereFormat();
@@ -369,7 +369,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement orWhere(String column, int columnData) throws Exception {
+    public SelectStatementModel orWhere(String column, int columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereFormat();
@@ -395,7 +395,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement orWhere(String column,String condition, String columnData) throws Exception {
+    public SelectStatementModel orWhere(String column,String condition, String columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereFormat();
@@ -421,7 +421,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement orWhereLike(String column, String columnData) throws Exception {
+    public SelectStatementModel orWhereLike(String column, String columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereLike();
@@ -447,7 +447,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement orWhereNotLike(String column, String columnData) throws Exception {
+    public SelectStatementModel orWhereNotLike(String column, String columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereNotLike();
@@ -473,7 +473,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement orWhere(String column,String condition, int columnData) throws Exception {
+    public SelectStatementModel orWhere(String column,String condition, int columnData) throws Exception {
         if (whereUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getWhereFormat();
@@ -499,7 +499,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement orderBy(String column) throws Exception {
+    public SelectStatementModel orderBy(String column) throws Exception {
         if (!orderByUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getOrderBy();
@@ -519,7 +519,7 @@ public class SelectStatement {
         }
     }
 
-    public SelectStatement orderByDesc(String column) throws Exception {
+    public SelectStatementModel orderByDesc(String column) throws Exception {
         if (!orderByUsed) {
             //Find the specified create statement
             String query = table.getEngineModel().getOrderByDesc();
@@ -539,27 +539,7 @@ public class SelectStatement {
         }
     }
 
-//    public JoinStatement from(String table) throws Exception {
-//        if (!whereUsed && !orderByUsed) {
-//            //Find the specified create statement
-//            String query = this.table.getEngineModel().getFrom();
-//
-//            //Replace all the parameter slots with the correct parameter
-//            ObservableList<ParameterDetails> details = EngineDecoder.getParameterDetails(query);
-//            String[] parameters = {table};
-//            query = EngineDecoder.replace(details, parameters, query);
-//
-//            this.query = this.query + " " + query;
-//
-//            return new JoinStatement(this.table,this.query);
-//        } else if (whereUsed) {
-//            throw new JoinStatementException();
-//        } else {
-//            throw new JoinStatementException("A join statement cannot be used with an orderBy statement");
-//        }
-//    }
-
-    public SelectStatement innerJoin(String table) throws Exception {
+    public SelectStatementModel innerJoin(String table) throws Exception {
         if (!whereUsed && !orderByUsed) {
             //Find the specified create statement
             String query = this.table.getEngineModel().getJoinFormat();
@@ -604,20 +584,17 @@ public class SelectStatement {
         }
     }
 
-    public ResultSet get() throws SQLException {
-        ResultSet rs = null;
-        try (java.sql.Connection con = table.getDatabase().openConnection()) {
-            rs = con.createStatement().executeQuery(this.query);
+    public List<?> get() throws SQLException {
+        Database db = table.getDatabase();
+        Sql2o sql = new Sql2o(db.getConnectionUrl(),db.getUsername(), db.getPassword());
+        System.out.println(db.getConnectionUrl());
+
+        try (Connection con = sql.open()) {
+            return con.createQuery(this.query).executeAndFetch(modelFormat);
         }
-
-        return rs;
     }
 
-    public ResultSet first() throws Exception {
-        return get(1);
-    }
-
-    public ResultSet get(int limit) throws Exception {
+    public List<?> get(int limit) throws Exception {
         //Find the specified create statement
         String query = table.getEngineModel().getLimitFormat();
 
@@ -628,44 +605,16 @@ public class SelectStatement {
 
         this.query += " " + query;
 
-        ResultSet rs = null;
-        try (java.sql.Connection con = table.getDatabase().openConnection()) {
-            rs = con.createStatement().executeQuery(this.query);
-        }
-
-        return rs;
-    }
-
-    public List<?> get(Class format) throws SQLException {
         Database db = table.getDatabase();
         Sql2o sql = new Sql2o(db.getConnectionUrl(),db.getUsername(), db.getPassword());
 
         try (Connection con = sql.open()) {
-            return con.createQuery(this.query).executeAndFetch(format);
+            return con.createQuery(this.query).executeAndFetch(modelFormat);
         }
     }
 
-    public Object first(Class format) throws Exception {
-        List<?> items = get(format,1);
+    public Object first() throws Exception {
+        List<?> items = get(1);
         return items.get(0);
-    }
-
-    public List<?> get(Class format,int limit) throws Exception {
-        //Find the specified create statement
-        String query = table.getEngineModel().getLimitFormat();
-
-        //Replace all the parameter slots with the correct parameter
-        ObservableList<ParameterDetails> details = EngineDecoder.getParameterDetails(query);
-        String[] parameters = {limit+""};
-        query = EngineDecoder.replace(details, parameters, query);
-
-        this.query += " " + query;
-
-        Database db = table.getDatabase();
-        Sql2o sql = new Sql2o(db.getConnectionUrl(),db.getUsername(), db.getPassword());
-
-        try (Connection con = sql.open()) {
-            return con.createQuery(this.query).executeAndFetch(format);
-        }
     }
 }
