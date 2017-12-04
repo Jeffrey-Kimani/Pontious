@@ -9,6 +9,7 @@ import com.Tunes_Developers.Utils.TableStatement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -456,7 +457,9 @@ public class Table {
             String[] parameters = {tableName,allColumns.substring(0,allColumns.length()-2)};
             query = EngineDecoder.replace(details,parameters,query);
 
-            getDatabase().getStatement().execute(query);
+            try (Connection con = getDatabase().openConnection()) {
+                con.createStatement().execute(query);
+            }
         }
     }
 
@@ -477,7 +480,9 @@ public class Table {
             String[] parameters = {tableName,allColumns.substring(0,allColumns.length()-2)};
             query = EngineDecoder.replace(details,parameters,query);
 
-            getDatabase().getStatement().execute(query);
+            try (Connection con = getDatabase().openConnection()) {
+                con.createStatement().execute(query);
+            }
         }
     }
 
@@ -489,7 +494,9 @@ public class Table {
         ObservableList<ParameterDetails> details = EngineDecoder.getParameterDetails(query);
         query = EngineDecoder.replace(details.get(0),tableName,query);
 
-        getDatabase().getStatement().execute(query);
+        try (Connection con = getDatabase().openConnection()) {
+            con.createStatement().execute(query);
+        }
     }
 
     public void dropColumn(String columnName) throws MissingParameter, SQLException {
@@ -501,7 +508,9 @@ public class Table {
         String[] parameters = {tableName,columnName};
         query = EngineDecoder.replace(details,parameters,query);
 
-        getDatabase().getStatement().execute(query);
+        try (Connection con = getDatabase().openConnection()) {
+            con.createStatement().execute(query);
+        }
     }
 
     public void renameTable(String newName) throws MissingParameter, SQLException {
@@ -513,6 +522,8 @@ public class Table {
         String[] parameters = {tableName,newName};
         query = EngineDecoder.replace(details,parameters,query);
 
-        getDatabase().getStatement().execute(query);
+        try (Connection con = getDatabase().openConnection()) {
+            con.createStatement().execute(query);
+        }
     }
 }

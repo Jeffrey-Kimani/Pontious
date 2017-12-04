@@ -19,9 +19,10 @@ public class Database {
     private String connectionUrl = null;
     private Engine engine;
     private EngineModel engineModel;
-    private Connection connection;
+    private boolean missingDatabaseName;
+//    private Connection connection;
 
-    public Database(int portNumber,String databaseName, String username, String password, Engine engine) throws Exception {
+    public Database(String portNumber,String databaseName, String username, String password, Engine engine) throws Exception {
         this.databaseName = databaseName;
         this.username = username;
         this.password = password;
@@ -30,11 +31,19 @@ public class Database {
         connectionLocalHost();
     }
 
-    public Database(int portNumber, String username, String password, Engine engine) throws Exception {
+    public Database(String portNumber, String username, String password, Engine engine) throws Exception {
         this.username = username;
         this.password = password;
         this.portNumber = portNumber+"";
         this.engine = engine;
+        connectionLocalHostNoDb();
+    }
+
+    public Database(String portNumber, Engine engine) throws Exception {
+        this.portNumber = portNumber;
+        this.engine = engine;
+        this.username = "";
+        this.password = "";
         connectionLocalHostNoDb();
     }
 
@@ -45,6 +54,49 @@ public class Database {
         this.ipAddress = ipAddress;
         this.portNumber = portNumber+"";
         this.engine = engine;
+        connectionRemote(databaseName);
+    }
+
+    public Database(Config config) throws Exception {
+        this.engine = new Engine(config.getConfigModel().getDatabase().getEngine());
+        this.ipAddress = config.getConfigModel().getDatabase().getHost();
+        this.portNumber = config.getConfigModel().getDatabase().getPort();
+        this.databaseName = config.getConfigModel().getDatabase().getDatabaseName();
+        this.username = config.getConfigModel().getDatabase().getUsername();
+        this.password = config.getConfigModel().getDatabase().getPassword();
+
+        if (ipAddress.equals("")) {
+            connectionLocalHostNoDb();
+            create(databaseName);
+        } else {
+            connectionRemote();
+        }
+    }
+
+    public Database() throws Exception {
+        Config config = new Config();
+        this.engine = new Engine(config.getConfigModel().getDatabase().getEngine());
+        this.ipAddress = config.getConfigModel().getDatabase().getHost();
+        this.portNumber = config.getConfigModel().getDatabase().getPort();
+        this.databaseName = config.getConfigModel().getDatabase().getDatabaseName();
+        this.username = config.getConfigModel().getDatabase().getUsername();
+        this.password = config.getConfigModel().getDatabase().getPassword();
+
+        if (ipAddress.equals("")) {
+            connectionLocalHostNoDb();
+            create(databaseName);
+        } else {
+            connectionRemote();
+        }
+    }
+
+    public Database(String host, int port, String username, String password, Engine engine) throws Exception {
+        this.ipAddress = host;
+        this.portNumber = port+"";
+        this.username = username;
+        this.password = password;
+        this.engine = engine;
+
         connectionRemote();
     }
 
@@ -77,20 +129,26 @@ public class Database {
     }
 
     public DatabaseMetaData databaseMetaData() throws SQLException {
-        return this.connection.getMetaData();
+        DatabaseMetaData dbMD = null;
+
+        try (Connection con = openConnection()) {
+            dbMD = con.getMetaData();
+        }
+
+        return dbMD;
     }
 
-    public Statement getStatement() throws SQLException {
-        return this.connection.createStatement();
+    public String getConnectionUrl() {
+        return connectionUrl;
     }
 
-    public ResultSet getResultSet(String query) throws SQLException {
-        return this.getStatement().executeQuery(query);
-    }
-
-    public void closeConnection() throws SQLException {
-        this.connection.close();
-    }
+//    public Statement getStatement() throws SQLException {
+//        return this.connection.createStatement();
+//    }
+//
+//    public ResultSet getResultSet(String query) throws SQLException {
+//        return this.getStatement().executeQuery(query);
+//    }
 
     public void create(String dbName) throws Exception {
         //Find the specified connection url
@@ -102,10 +160,14 @@ public class Database {
 
         //Execute Create query
         this.databaseName = dbName;
-        getStatement().execute(query);
 
-        closeConnection();
-        connectionLocalHost();
+        try (Connection con = openConnection()) {
+            con.createStatement().execute(query);
+        }
+
+        if (missingDatabaseName) {
+            connectionUrl = connectionUrl + dbName;
+        }
     }
 
     public void drop(String dbName) throws Exception {
@@ -118,7 +180,9 @@ public class Database {
 
         //Execute Create query
         this.databaseName = dbName;
-        getStatement().execute(query);
+        try (Connection con = openConnection()) {
+            con.createStatement().execute(query);
+        }
     }
 
     public void drop() throws Exception {
@@ -130,7 +194,13 @@ public class Database {
         query = EngineDecoder.replace(details.get(0),databaseName,query);
 
         //Execute Create query
-        getStatement().execute(query);
+        try (Connection con = openConnection()) {
+            con.createStatement().execute(query);
+        }
+    }
+
+    public Connection openConnection() throws SQLException {
+        return DriverManager.getConnection(connectionUrl,username,password);
     }
 
     private void connectionLocalHost() throws Exception {
@@ -140,10 +210,7 @@ public class Database {
         //Replace all the parameter slots for port number with the correct parameter
         ObservableList<ParameterDetails> details = EngineDecoder.getParameterDetails(connectionUrl);
         connectionUrl = EngineDecoder.replace(details.get(0),portNumber,connectionUrl);
-        this.connectionUrl = connectionUrl;
-
-        //Initialize Connection
-        this.connection = DriverManager.getConnection(connectionUrl+databaseName,username,password);
+        this.connectionUrl = connectionUrl+databaseName;
     }
 
     private void connectionLocalHostNoDb() throws Exception {
@@ -154,9 +221,19 @@ public class Database {
         ObservableList<ParameterDetails> details = EngineDecoder.getParameterDetails(connectionUrl);
         connectionUrl = EngineDecoder.replace(details.get(0),portNumber,connectionUrl);
         this.connectionUrl = connectionUrl;
+        //Set the database name as missing
+        missingDatabaseName = true;
+    }
 
-        //Initialize Connection
-        this.connection = DriverManager.getConnection(connectionUrl,username,password);
+    private void connectionRemote(String databaseName) throws Exception {
+        //Find the specified connection url
+        String connectionUrl = engine.getModel().getConnectionRemote();
+
+        //Replace all the parameter slots with the correct parameter
+        ObservableList<ParameterDetails> details = EngineDecoder.getParameterDetails(connectionUrl);
+        String[] parameters = {ipAddress,portNumber+""};
+        connectionUrl = EngineDecoder.replace(details,parameters,connectionUrl);
+        this.connectionUrl = connectionUrl+databaseName;
     }
 
     private void connectionRemote() throws Exception {
@@ -168,8 +245,7 @@ public class Database {
         String[] parameters = {ipAddress,portNumber+""};
         connectionUrl = EngineDecoder.replace(details,parameters,connectionUrl);
         this.connectionUrl = connectionUrl;
-
-        //Initialize Connection
-        this.connection = DriverManager.getConnection(connectionUrl+databaseName,username,password);
+        //Set the database name as missing
+        missingDatabaseName = true;
     }
 }

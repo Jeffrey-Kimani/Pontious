@@ -55,10 +55,17 @@ public class EngineModel {
     private String whereFormat = "";
     private String orWhereFormat = "";
     private String whereThreeFormat = "";
+    private String whereLike = "";
+    private String multipleWhere = "";
+    private String whereNotLike = "";
+    private String from = "";
     private String joinFormat = "";
     private String limitFormat = "";
     private String deleteSelectFormat = "";
     private String deleteFrom = "";
+    private String orderBy = "";
+    private String orderByDesc = "";
+    private String on = "";
 
 //    Manipulate records
     private String insertFormat = "";
@@ -269,5 +276,33 @@ public class EngineModel {
 
     public String getCreateString() {
         return createString;
+    }
+
+    public String getWhereLike() {
+        return whereLike;
+    }
+
+    public String getWhereNotLike() {
+        return whereNotLike;
+    }
+
+    public String getMultipleWhere() {
+        return multipleWhere;
+    }
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public String getOrderByDesc() {
+        return orderByDesc;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public String getOn() {
+        return on;
     }
 }

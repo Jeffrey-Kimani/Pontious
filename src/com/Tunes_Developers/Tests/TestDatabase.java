@@ -11,13 +11,18 @@ import java.io.IOException;
  */
 public class TestDatabase {
     public static void main(String[] args) throws Exception {
-        Engine engine = new Engine("maria");
+        Engine engine = new Engine("mysql");
 
-        Database db = new Database(3307,"root","J357~</5c0rp10n>",engine);
-        db.setDatabaseName("lash");
+//        Database db = new Database("3307","root","J357~</5c0rp10n>",engine);
+//        Database db = new Database("3306", "root", "J357~</5c0rp10n>", engine);
+//        db.setDatabaseName("lash");
 //        Database dbRemote = new Database("46.101.81.163",3306,"muc","root","secret",engine);
 
+//        Database dbRemote = new Database("127.0.0.1",3307,"root","J357~</5c0rp10n>",engine);
+        Database dbRemote = new Database("127.0.0.1",3306,"root","J357~</5c0rp10n>",engine);
+
+        dbRemote.create("lash");
 //        db.create("lash");
-//        db.drop();
+        dbRemote.drop();
     }
 }

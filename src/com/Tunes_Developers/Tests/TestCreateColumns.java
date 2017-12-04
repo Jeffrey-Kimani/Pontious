@@ -11,7 +11,7 @@ public class TestCreateColumns {
     public static void main(String[] args) throws Exception {
         Engine engine = new Engine("maria");
 
-        Database db = new Database(3307,"root","J357~</5c0rp10n>",engine);
+        Database db = new Database("3307","root","J357~</5c0rp10n>",engine);
         db.create("lash");
 
         Table tunes = new Table(db, "tunes");
