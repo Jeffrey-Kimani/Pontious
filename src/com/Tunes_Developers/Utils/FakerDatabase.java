@@ -1,5 +1,6 @@
 package com.Tunes_Developers.Utils;
 
+import com.Tunes_Developers.Config;
 import com.Tunes_Developers.Models.FakerItem;
 
 /**
@@ -9,8 +10,10 @@ public class FakerDatabase {
     String country = null;
     String language = null;
 
-    public FakerDatabase() {
-
+    public FakerDatabase() throws Exception {
+        Config config = new Config();
+        this.language = config.getConfigModel().getFaker().getLanguage();
+        this.country = config.getConfigModel().getFaker().getCountry();
     }
 
     public FakerDatabase(String language, String country) {

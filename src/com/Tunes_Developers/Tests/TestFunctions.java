@@ -11,10 +11,10 @@ import com.Tunes_Developers.Utils.FakerDatabase;
  */
 public class TestFunctions {
     public static void main(String[] args) throws Exception {
-        Engine engine = new Engine("maria");
+        Engine engine = new Engine("mysql");
         FakerDatabase fd = new FakerDatabase("English","Kenya");
 
-        Database db = new Database(3307, "small_shephard", "</Q0W4L5Q!>", engine);
+        Database db = new Database("3306", "root", "J357~</5c0rp10n>", engine);
         db.create("karis");
 
         Table students = new Table(db, "students");
@@ -30,7 +30,7 @@ public class TestFunctions {
         insert.cellString("email", fd.emailResource());
         insert.cellString("adm_no",fd.numerify("J##-####-201#"));
         insert.cellInt("marks", fd.numerifyAboveZero("##"));
-        insert.insertRows(100);
+        insert.insertRows(800);
 
 
     }

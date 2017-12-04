@@ -587,7 +587,6 @@ public class SelectStatementModel {
     public List<?> get() throws SQLException {
         Database db = table.getDatabase();
         Sql2o sql = new Sql2o(db.getConnectionUrl(),db.getUsername(), db.getPassword());
-        System.out.println(db.getConnectionUrl());
 
         try (Connection con = sql.open()) {
             return con.createQuery(this.query).executeAndFetch(modelFormat);

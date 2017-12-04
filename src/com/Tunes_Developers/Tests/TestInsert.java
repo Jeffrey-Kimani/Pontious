@@ -16,7 +16,7 @@ public class TestInsert {
         Engine engine = new Engine("maria");
         FakerDatabase fd = new FakerDatabase("English","Kenya");
 
-        Database db = new Database(3307, "root", "J357~</5c0rp10n>", engine);
+        Database db = new Database("3307", "root", "J357~</5c0rp10n>", engine);
         db.create("karis");
 
         Table students = new Table(db, "students");

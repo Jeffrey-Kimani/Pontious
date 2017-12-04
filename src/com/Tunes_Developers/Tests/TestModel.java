@@ -15,7 +15,7 @@ public class TestModel {
         List<StudentModel> students;
         StudentModel student = new StudentModel(config);
 
-        StudentModel student1 = (StudentModel) student.find(23);
+        StudentModel student1 = (StudentModel) student.find(23+"");
 //        System.out.println(student1.toString());
 
 
@@ -29,7 +29,7 @@ public class TestModel {
 
         int count = 1;
         for (StudentModel s : students) {
-//            System.out.println(count+".  "+s.toString());
+            System.out.println(count+".  "+s.toString());
             count++;
         }
 
@@ -40,7 +40,8 @@ public class TestModel {
             System.out.println(s.toString());
         }
 
-        student.save(generatedStudents);
-        student.delete(generatedStudents);
+//        student.save(generatedStudents);
+//        student.delete(generatedStudents);
+
     }
 }

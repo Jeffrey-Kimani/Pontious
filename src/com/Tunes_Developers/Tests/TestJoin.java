@@ -13,11 +13,11 @@ import java.sql.ResultSet;
  */
 public class TestJoin {
     public static void main(String[] args) throws Exception {
-        Engine engine = new Engine("maria");
+        Engine engine = new Engine("mysql");
         FakerDatabase fd = new FakerDatabase("English","Kenya");
 
-        Database db = new Database(3307, "root", "J357~</5c0rp10n>", engine);
-        db.create("cars");
+        Database db = new Database("3306", "root", "J357~</5c0rp10n>", engine);
+        db.create("gari");
 
         Table students = new Table(db, "cars");
         ManipulateData manipulateData = new ManipulateData(students);

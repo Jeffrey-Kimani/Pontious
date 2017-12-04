@@ -22,7 +22,7 @@ public class Database {
     private boolean missingDatabaseName;
 //    private Connection connection;
 
-    public Database(int portNumber,String databaseName, String username, String password, Engine engine) throws Exception {
+    public Database(String portNumber,String databaseName, String username, String password, Engine engine) throws Exception {
         this.databaseName = databaseName;
         this.username = username;
         this.password = password;
@@ -31,11 +31,19 @@ public class Database {
         connectionLocalHost();
     }
 
-    public Database(int portNumber, String username, String password, Engine engine) throws Exception {
+    public Database(String portNumber, String username, String password, Engine engine) throws Exception {
         this.username = username;
         this.password = password;
         this.portNumber = portNumber+"";
         this.engine = engine;
+        connectionLocalHostNoDb();
+    }
+
+    public Database(String portNumber, Engine engine) throws Exception {
+        this.portNumber = portNumber;
+        this.engine = engine;
+        this.username = "";
+        this.password = "";
         connectionLocalHostNoDb();
     }
 
@@ -50,6 +58,23 @@ public class Database {
     }
 
     public Database(Config config) throws Exception {
+        this.engine = new Engine(config.getConfigModel().getDatabase().getEngine());
+        this.ipAddress = config.getConfigModel().getDatabase().getHost();
+        this.portNumber = config.getConfigModel().getDatabase().getPort();
+        this.databaseName = config.getConfigModel().getDatabase().getDatabaseName();
+        this.username = config.getConfigModel().getDatabase().getUsername();
+        this.password = config.getConfigModel().getDatabase().getPassword();
+
+        if (ipAddress.equals("")) {
+            connectionLocalHostNoDb();
+            create(databaseName);
+        } else {
+            connectionRemote();
+        }
+    }
+
+    public Database() throws Exception {
+        Config config = new Config();
         this.engine = new Engine(config.getConfigModel().getDatabase().getEngine());
         this.ipAddress = config.getConfigModel().getDatabase().getHost();
         this.portNumber = config.getConfigModel().getDatabase().getPort();

@@ -28,6 +28,10 @@ public class StudentModel extends Model {
         faker = new Faker(fakerEnvironment.getLanguage(), fakerEnvironment.getLanguage());
     }
 
+    public StudentModel() {
+
+    }
+
     public StudentModel(int id, String name, String email, String adm_no, int marks) {
         this.id = id;
         this.name = name;
