@@ -1,4 +1,4 @@
-#Pontious
+# Pontious
 Pontious is an ORM library that provides a way to do SQL queries without necessarily writing SQL Query code. It is built over SQL2o to provide a nice ORM touch. Pontious allows you to work with almost all SQL related engines; MariaDB and MySql are supported by default. Very soon most of the engines will be supported too.
 
 When used with the faker library it can insert test data to your database.
@@ -7,7 +7,7 @@ Pontious makes it easy to work with a relational database in java. Its functiona
 
 Pontious is heavily inspired by the ORM provided by laravel and the Eloquent features provided by Laravel. Most of it's functionality if not all are related to the Laravel API. Pontious was built by Tunes Developers and is open source.
 
-#Table of Contents
+# Table of Contents
 
 -[Installation]
 -[Pontious Protocol]
@@ -37,8 +37,8 @@ Pontious is heavily inspired by the ORM provided by laravel and the Eloquent fea
 - [DB class]
 
 
-##Pontious Protocol
-###Engine
+## Pontious Protocol
+### Engine
 Pontious is built to work with various SQL related engines. As specified above MariaDB and MySql are provided by default. Below is a sample engine: 
 
 ```json
@@ -119,10 +119,10 @@ In the create database query, only one field changes each time that query is wri
 
 This is pretty much like the sublime text snippet definition syntax. This makes creating an engine a simple experience. If you are interested in creating an engine file for your favourite engine, that is an example of how its done.
 
-###Database Connection
+### Database Connection
 Database connections can either be done manually during creation of an object or via the use of the Config library.
 
-####Manual Connections
+#### Manual Connections
 To define a manual connection you create an engine object with the name of your engine. You will then create a database object with the port number, the username, the password and the engine object for a localhost connection and the ip address, the port number, the username, the password and the engine object for a remote connection.
 
 ```java
@@ -143,7 +143,7 @@ public class Main {
 }
 ```
 
-####Config Connections
+#### Config Connections
 Config connections are done using the configuration api provided by Tunes Developers. A config api, consolidates all the configurations needed in an application to one file so that they dont have to be initialized every time they are needed. Take an example of the database object. Each time it is initalized, the port number, ip address, username, password and engine is required. If you are initalizing this object a couple of times in your code, not only will creating this object be repetative but it will also waste a lot of time.
 
 The config api provides a way to setup all this required variables once. It is much like the .env file in php. Below is an example of a default database configuration:
@@ -183,12 +183,12 @@ The configuration object created requires the location of the configurations fil
 
 The config object can also be initialized without a location being provided. The default location is a hidden folder in the users location of the Operating System. When the config finds that the default file does not exist, it will create the configuration file with the default variables for each fields, just as specified in the sample configuration file.
 
-###Droping and Creating a Database
+### Droping and Creating a Database
 It is possible to drop or create a database in pontious. To create a database the method `db.create("database_name")` is used. This method implements a query with an if condition to make sure an error message is not returned in case the database exists. To drop a database the method `db.drop("database_name")` is used.
 
 These two methods discussed above can be used without a parameter if the database name was defined in the configurations file or in the database object.
 
-##Tables
+## Tables
 Creating a table with the pontious api is an easy task since no SQL query code is written by the programmer. Below is an example of creating a vehicles table and a brand table that we will be using throughout this documentation.
 
 ```java
@@ -226,7 +226,7 @@ The vehicles table will have an `id` field as the primary key, auto incremented,
 
 The model table will have an `id` field simillar to the vehicles table id, a `title` field with 50 characters, a `year_established` field with 4 integers and timestamp fields (`created_at` and `updated_at`).
 
-###Suported Methods
+### Suported Methods
 Below is a list of the supported methods when creating a table
 
 ``bool(String columnName)``
@@ -262,13 +262,13 @@ Similar to the increment method. Only that you can specify the length of the col
 ``decimal(String columnName)``
 ``decimal(String columnName, int nbTotalDigits, int nbDecimalPoints)``
 
-###Droping and Renaming a Table
+### Droping and Renaming a Table
 To drop a table use the method ``table.dropTable()``. To rename a table use the method ``table.renameTable("new_table_name")``.
 
-##Manipulating Data
+## Manipulating Data
 Every database has to have a way to manipulate data in the database. There has to be a way to insert, update, delete and read data from the database.
 
-###Inserting Data
+### Inserting Data
 Inserting data to a database has never been as easy as this in java.
 
 ```java
@@ -294,7 +294,7 @@ public class TestInsert {
 
 The above code inserts a row to the vehicles table in the cars database. When inserting data you will need two methods; the `cellString()` and the `cellInt()` methods. The `cellString()` is used to insert data that will be wrapped in quatation marks when inserting it using normal sql queries e.g. var characters, text, date and time etc. The `cellInt()` method is used to insert data made up of numbers only e.g. floats, doubles, decimals, integers etc.
 
-####Inserting Fake data
+#### Inserting Fake data
 The pontious api can be used with the faker api from Tunes Developers to insert fake records to the database. Fake records are rows with data that simulates the normal data a user will input but this data has not been necessarily inputed by a user.
 
 This fake data is important to a programmer for testing purposes when constructing a system. The faker api when used with the pontious api can generate large amounts of data, depending on the programmers need. Whether you need 5 records in a table or 20 000 000 records to check the versatility of a system, pontious is for you.
@@ -325,7 +325,7 @@ public class TestInsert {
 
 The above code creates 1000 records in the database. All the fields are populated with the relevant data. The faker api can generte a wide range of data e.g. names, email addresses, ipv4 addresses, ipv6 addresses, color codes (hex,rgb,rgba), cities, countries, credit card numbers and their types etc.
 
-###Updating Data
+### Updating Data
 You can also update data using the pontious api. Below is an example
 
 ```java
@@ -352,7 +352,7 @@ public class TestInsert {
 
 The above code updates the row with the `id` as 4 to have the fields specified. If the primary column is named id you can use this method `updateRow("4")`, no need to specifiy the primary key column since by default this column is named id.
 
-###Deleting Data
+### Deleting Data
 Below is an example of how you can delete a row.
 
 ```java
@@ -373,7 +373,7 @@ public class TestInsert {
 
 The above example deletes a row with the column id as 5 from the table.
 
-###Reading Data
+### Reading Data
 The normal way for reading data from the database in java is by the use of result sets. Pontious api provides this functionality, but it also provides a way to use objects. By making use of the Sql2o api pontious can fetch data from the relational database and convert it into defined object. This will be discussed later, for now we will tackle fetching data using the `ResultSet` class.
 
 Below is code to demonstrate how to fetch data from the database.
@@ -406,7 +406,7 @@ public class TestInsert {
 
 The above code grabs 10 records from the database and display the necessary fields. The `select()` method can fetch any number of fields from the database. The `get()` method can take an integer argument to specify the number of records you want fetched. If used without a parameter it gets all the records in the database table.
 
-####Where Clause
+#### Where Clause
 Reading  data can be used with the where clause to filter out the data fetched. Below is an example.
 
 ```java
@@ -443,7 +443,7 @@ public class TestInsert {
 
 The above example will fetch records that match the where conditions provided. which means the records fetched will have an `id` greater than 20, a price less than 2 000 000 and a price greater than or equal to 100 000. The where methods can be chained together as demonstrated above.
 
-#####Supported Method
+##### Supported Methods
 The are a number of where methods provided by the api, they include
 
 1. `where(String column, int columnData)`
@@ -458,7 +458,7 @@ Selects records where the column data matches the condition specified. e.g. wher
 4. `where(String column,String condition, int columnData)`
 Similar to number 3 only that it takes the second argument as a String.
 
-####Where Like Clause
+#### Where Like Clause
 This is a where clause with a like clause in it. Below is an example
 
 ```java
@@ -495,7 +495,7 @@ public class TestInsert {
 
 The above code has added an implementation for the `whereLike()` and `whereNotLike()` methods. It selects record where the name matches `ra%` condition and the name does not match `maclaren%` condition. The API also provides a `whereNotLike()` clause to implement the not condition.
 
-####Or Where Clause
+#### Or Where Clause
 When chaining many where clauses together you may need the use of an or symbol `||`. When many where methods are chainned together the generated sql query chains the using `&&`. To chain a specific method using `||`, the `orWhere()` method is provided. Below is an example.
 ```java
 import com.Tunes_Developers.Database;
@@ -531,7 +531,7 @@ public class TestInsert {
 
 The code above fetches records where the `id` is equal to 20 or where the `name` is equal to `Ractis` or where the `price` is equal to 250 000. The or clause is also available in the following methods `orWhereLike(String column, String columnData)`, `orWhereNotLike(String column, String columnData)` and all the where methods discussed above.
 
-####Order By Clause
+#### Order By Clause
 The orderBy methods can be used to order the records by a specified manner. Below is an example.
 
 ```java
@@ -567,7 +567,7 @@ public class TestInsert {
 
 The code above fetches the data from the database where the price is greater than 100 000 and sorts them in ascending order and fetches only 10 records. It then prints them out on the console. To sort in descending order use the method `orderByDesc(String columnName)`.
 
-####Join Clause
+#### Join Clause
 The API provides for a way to use the Join clause when reading data from the database. Below is an example
 ```java
 import com.Tunes_Developers.Database;
@@ -607,12 +607,12 @@ public class TestInsert {
 
 The above example will return all the records from the vehicles table and link each record with the specific related brand. This means that you can display the brand title when printing out the vehicles details.
 
-##Eloquent Models
+## Eloquent Models
 When reading data from the database, using result sets could be tidious and repetitive especially when working with very huge database. We have therefore provided and ORM to convert a relational Database Item from a ResultSet into an object of a specific class.
 
 In this topic, we will discuss how to set-up a model, how to manipulate data and how to model relationships using a the Eloquent Model.
 
-###Seting up a Model.
+### Seting up a Model.
 When creating an app especially when using JavaFX. The following approach is used.
 
 View -> Controller -> Model
@@ -703,7 +703,7 @@ Extending from the Model class provides a lot of functionalities. Some of them i
   4. Addtion of methods to model relationships i.e. `hasOne()` and `hasMany()` to model the relationships between model.
   5. Adition of methods to find an item by id or get all items i.e. `find()` and `get()`.
 
-###Implementing Model Methods
+### Implementing Model Methods
 We are now going to look at an example of how we can put into use the above Model.
 
 ```java
@@ -796,7 +796,7 @@ public class TestModel {
 }
 ```
 
-##DB Class
+## DB Class
 You might need a way to read data from the database without creating objects. For this functionality the DB class comes in handy. For the current version,  it can only fetch data. Write and Delete operations are not supported in the DB class. Below is an example of how to use this class.
 
 ```java
