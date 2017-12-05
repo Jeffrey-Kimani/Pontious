@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 # Pontious
-=======
-#Pontious
-
->>>>>>> b4f6514200ca38bba1d7185018b6a05473eeeade
 Pontious is an ORM library that provides a way to do SQL queries without necessarily writing SQL Query code. It is built over SQL2o to provide a nice ORM touch. Pontious allows you to work with almost all SQL related engines; MariaDB and MySql are supported by default. Very soon most of the engines will be supported too.
 
 When used with the faker library it can insert test data to your database.
