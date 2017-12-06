@@ -22,17 +22,20 @@ public class StudentModel extends Model {
     public int marks;
 
     public StudentModel(Config config) throws Exception {
+        super("school");
         Database db = new Database(config);
         table = new Table(db,tableName);
         FakerEnvironment fakerEnvironment = config.getConfigModel().getFaker();
         faker = new Faker(fakerEnvironment.getLanguage(), fakerEnvironment.getLanguage());
     }
 
-    public StudentModel() {
+    public StudentModel() throws Exception {
+        super("school");
 
     }
 
-    public StudentModel(int id, String name, String email, String adm_no, int marks) {
+    public StudentModel(int id, String name, String email, String adm_no, int marks) throws Exception {
+        super("school");
         this.id = id;
         this.name = name;
         this.email = email;
@@ -51,7 +54,7 @@ public class StudentModel extends Model {
     }
 
     @Override
-    public Model generateFakeModel() {
+    public Model generateFakeModel() throws Exception {
         return new StudentModel(
                Integer.parseInt(faker.numerifyAboveZero("######")),
                 faker.name(),

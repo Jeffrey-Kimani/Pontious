@@ -70,7 +70,7 @@ public class Model {
         return DB.table(relatedClass.tableName,relatedClass.getClass()).where(field,data).get();
     }
 
-    public Object generateFakeModel() {
+    public Object generateFakeModel() throws Exception {
         return this;
     }
 }

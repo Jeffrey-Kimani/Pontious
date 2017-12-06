@@ -208,7 +208,7 @@ public class Main {
         vehicles.integer("brand_id");
         vehicles.Double("price",12,2);
         vehicles.text("description",500);
-        vehicles.timestamps();
+        vehicles.timeStamps();
         vehicles.createTable();
 
         //Create a brand table
@@ -216,7 +216,7 @@ public class Main {
         brand.increment("id");
         brand.string("title",50);
         brand.integer("year_established",4).unsigned();
-        brand.timestamps();
+        brand.timeStamps();
         brand.createTable();
     }
 }
@@ -313,11 +313,11 @@ public class TestInsert {
       FakerDatabase fd = new FakerDatabase();
 
       ManipulateData manVehicles = new ManipulateData(vehicles);
-      manVehicles.cellString("model_name",fd.words(3));
+      manVehicles.cellString("model_name",fd.sentence(3));
       manVehicles.cellInt("horse_power",fd.numerifyAboveZero("####"));
       manVehicles.cellInt("brand_id",fd.numerifyNoZeros("##","24"));
       manVehicles.cellInt("price",fd.numerify("#########.##"));
-      manVehicles.cellString("description",fd.text(1,4));
+      manVehicles.cellString("description",fd.paragraph(8,4));
       manVehicles.insertRows(1000);
   }
 }
@@ -424,8 +424,7 @@ public class TestInsert {
 
       ResultSet rs = 
           manVehicles.select("id","model_name","horse_power","price")
-                    .where("id",">=",20)
-                    .where("price","<"2000000)
+                    .where("price","<",2000000)
                     .where("price",">=",100000)
                     .get(10);
 

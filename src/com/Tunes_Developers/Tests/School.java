@@ -17,13 +17,15 @@ public class School extends Model {
     String primaryKeyColumn = "id";
 
     public School(Config config) throws Exception {
+        super("school");
         Database db = new Database(config);
         table = new Table(db,tableName);
         FakerEnvironment fakerEnvironment = config.getConfigModel().getFaker();
         faker = new Faker(fakerEnvironment.getLanguage(), fakerEnvironment.getLanguage());
     }
 
-    public School() {
+    public School() throws Exception {
+        super("school");
 
     }
 
